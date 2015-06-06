@@ -1,8 +1,7 @@
-package com.sousa.inventario.com.sousa.inventario.adapters;
+package com.sousa.inventario.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sousa.inventario.Contagem;
-import com.sousa.inventario.com.sousa.inventario.activity.DetalheContagem;
+import com.sousa.inventario.activity.DetalheContagem;
 import com.sousa.inventario.R;
 
+import java.text.DateFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,6 +30,7 @@ public class InventarioAdapter extends RecyclerView.Adapter<InventarioAdapter.In
     public InventarioAdapter(Context context, List<Contagem> contagens){
         this.contagens = contagens;
         inflater = LayoutInflater.from(context);
+        this.context = context;
     }
 
     @Override
@@ -44,7 +45,7 @@ public class InventarioAdapter extends RecyclerView.Adapter<InventarioAdapter.In
     public void onBindViewHolder(InventarioItem inventarioItem, int i) {
         Contagem c = contagens.get(i);
         inventarioItem.centro.setText(c.centro);
-        inventarioItem.data.setText(c.data.toString());
+        inventarioItem.data.setText(DateFormat.getDateInstance().format(c.data));
         if(c.synched) {
             inventarioItem.synch.setVisibility(View.VISIBLE);
         }
@@ -74,8 +75,9 @@ public class InventarioAdapter extends RecyclerView.Adapter<InventarioAdapter.In
         @Override
         public void onClick(View view) {
             Intent i = new Intent(context, DetalheContagem.class);
-            Bundle b = i.getExtras();
-            b.putString("id", this.centro.getText().toString());
+            TextView pl = (TextView) view.findViewById(R.id.textView5);
+            CharSequence s = pl.getText();
+            i.putExtra("id", String.valueOf(s));
 
             context.startActivity(i);
         }

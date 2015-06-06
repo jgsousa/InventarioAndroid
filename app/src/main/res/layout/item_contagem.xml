@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Material"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"/>
 
@@ -23,8 +23,8 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="1000 UN"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"/>
 

@@ -1,4 +1,4 @@
-package com.sousa.inventario.com.sousa.inventario.adapters;
+package com.sousa.inventario.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -39,7 +39,7 @@ public class DetalheAdapter extends RecyclerView.Adapter<DetalheAdapter.VItemCon
     public void onBindViewHolder(VItemContagem vitem, int i) {
         ItemContagem item = contagem.getItens().get(i);
         vitem.material.setText(item.material);
-        vitem.quantidade.setText(String.valueOf(item.contado) + item.unidade);
+        vitem.quantidade.setText(String.valueOf(item.contado) + " " + item.unidade);
     }
 
     @Override

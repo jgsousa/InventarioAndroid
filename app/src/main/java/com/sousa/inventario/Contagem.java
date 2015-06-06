@@ -1,7 +1,6 @@
 package com.sousa.inventario;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +17,7 @@ public class Contagem {
     private List<ItemContagem> itens;
 
     public Contagem(boolean synched){
-        itens = Collections.emptyList();
+        itens = new ArrayList<>();
         this.synched = synched;
     }
 
@@ -37,20 +36,18 @@ public class Contagem {
         this.addItem(i);
     }
 
+    public static HashMap<String, Contagem> initContagens(){
+        return createDummy();
+    }
+
     public static HashMap<String,Contagem> createDummy(){
         HashMap<String,Contagem> contagens = new HashMap<>();
-        Contagem c = new Contagem(true);
-        c.centro = "Dummy";
-        c.data = new Date();
-        contagens.put(c.centro, c);
-        c = new Contagem(false);
-        c.centro = "Dummy 2";
-        c.data = new Date();
-        contagens.put(c.centro, c);
-        for(int i = 3;i < 20;i++ ){
+        Contagem c;
+        for(int i = 0;i < 4;i++ ){
             c = new Contagem(false);
             c.centro = "Dummy " + String.valueOf(i);
             c.data = new Date();
+            c.randInit();
             contagens.put(c.centro, c);
         }
         return contagens;
