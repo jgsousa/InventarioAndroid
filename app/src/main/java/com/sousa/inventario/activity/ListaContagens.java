@@ -10,16 +10,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.sousa.inventario.AppModel;
-import com.sousa.inventario.Contagem;
 import com.sousa.inventario.R;
 import com.sousa.inventario.adapters.InventarioAdapter;
 import com.sousa.inventario.helpers.DividerItemDecoration;
-
-import java.util.List;
 
 /**
  * Created by Joao on 06/06/2015.
@@ -27,22 +23,25 @@ import java.util.List;
 public class ListaContagens extends AppCompatActivity implements FloatingActionButton.OnClickListener{
 
     private Toolbar toolbar;
+    private RecyclerView recycle;
+    public static final int NEW_ITEM = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppModel.getInstance().initRealm(this);
+
         setContentView(R.layout.lista_contagens);
 
         toolbar = (Toolbar) findViewById(R.id.appbar);
-        RecyclerView recycle = (RecyclerView) findViewById(R.id.lista);
-        recycle.addItemDecoration(new DividerItemDecoration(this,LinearLayoutManager.VERTICAL));
+        recycle = (RecyclerView) findViewById(R.id.lista);
+        recycle.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
         recycle.setLayoutManager(new LinearLayoutManager(this));
         setSupportActionBar(toolbar);
         getSupportActionBar().setElevation(20);
 
-        List<Contagem> contagens = AppModel.getInstance().getContagens();
-        InventarioAdapter adapter = new InventarioAdapter(this, contagens);
+        InventarioAdapter adapter = new InventarioAdapter(this);
         recycle.setAdapter(adapter);
 
         ImageView imageView = new ImageView(this);
@@ -55,12 +54,19 @@ public class ListaContagens extends AppCompatActivity implements FloatingActionB
 
         actionButton.setOnClickListener(this);
 
+
     }
 
     @Override
     public void onClick(View view) {
         Intent i = new Intent(this, NovaContagemActivity.class);
-        startActivity(i);
+        startActivityForResult(i, NEW_ITEM);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        recycle.getAdapter().notifyDataSetChanged();
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

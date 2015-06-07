@@ -7,8 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sousa.inventario.Contagem;
-import com.sousa.inventario.ItemContagem;
+import com.sousa.inventario.AppModel;
+import com.sousa.inventario.model.Contagem;
+import com.sousa.inventario.model.ItemContagem;
 import com.sousa.inventario.R;
 
 /**
@@ -32,14 +33,16 @@ public class DetalheAdapter extends RecyclerView.Adapter<DetalheAdapter.VItemCon
         VItemContagem novo = new VItemContagem(item);
         novo.material = (TextView) item.findViewById(R.id.artigo);
         novo.quantidade = (TextView) item.findViewById(R.id.quantidade);
+        novo.ean = (TextView) item.findViewById(R.id.ean);
         return novo;
     }
 
     @Override
     public void onBindViewHolder(VItemContagem vitem, int i) {
         ItemContagem item = contagem.getItens().get(i);
-        vitem.material.setText(item.material);
-        vitem.quantidade.setText(String.valueOf(item.contado) + " " + item.unidade);
+        vitem.material.setText(item.getMaterial().getDescription());
+        vitem.quantidade.setText(String.valueOf(item.getContado()) + " " + item.getUnidade());
+        vitem.ean.setText(item.getMaterial().getEAN());
     }
 
     @Override
@@ -50,6 +53,7 @@ public class DetalheAdapter extends RecyclerView.Adapter<DetalheAdapter.VItemCon
     public class VItemContagem extends RecyclerView.ViewHolder{
         public TextView material;
         public TextView quantidade;
+        public TextView ean;
 
         public VItemContagem(View itemView) {
             super(itemView);

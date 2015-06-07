@@ -15,31 +15,31 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.sousa.inventario.AppModel;
-import com.sousa.inventario.Contagem;
-import com.sousa.inventario.ItemContagem;
-import com.sousa.inventario.Material;
+import com.sousa.inventario.model.Artigo;
+import com.sousa.inventario.model.Contagem;
+import com.sousa.inventario.model.ItemContagem;
 import com.sousa.inventario.R;
 import com.sousa.inventario.scanner.CaptureActivityAny;
+import com.sousa.inventario.utils.Contagens;
 
 import java.util.HashMap;
 
 
 public class Contar extends AppCompatActivity implements Button.OnClickListener{
 
-    private HashMap<String, Material> materiais;
     private Toolbar toolbar;
     private Contagem contagem;
     private EditText contagemView;
     private EditText materialView;
     private EditText eanView;
     private EditText unidadeView;
+    private Artigo material;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_contagem);
         contagem = AppModel.getInstance().getActiveContagem();
-        initData();
 
         toolbar = (Toolbar) findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
@@ -68,18 +68,9 @@ public class Contar extends AppCompatActivity implements Button.OnClickListener{
         });
     }
 
-    public void initData() {
-        materiais = new HashMap<>();
-        Material m = new Material("1", "123456", "UN", "Arroz Basmati");
-        materiais.put(m.EAN, m);
-        m = new Material("2", "654321", "SAC", "Arroz Elefante");
-        materiais.put(m.EAN, m);
-        m = new Material("3", "711719818731", "SAC", "Playstation TV");
-        materiais.put(m.EAN, m);
-    }
-
     private void setEAN(String ean){
-        Material m = materiais.get(ean);
+        Artigo m = AppModel.getInstance().getArtigoForEAN(ean);
+        material = m;
         if (m == null) {
             Toast toast = Toast.makeText(this, "Artigo nao existe", Toast.LENGTH_LONG);
             toast.show();
@@ -89,13 +80,10 @@ public class Contar extends AppCompatActivity implements Button.OnClickListener{
             EditText e = (EditText) findViewById(R.id.editText4);
             e.setText("");
         } else {
-            materialView.setText(m.description);
-            unidadeView.setText(m.unit);
+            materialView.setText(m.getDescription());
+            unidadeView.setText(m.getUnit());
             EditText e = (EditText) findViewById(R.id.editText4);
             e.setText("0");
-            //if(contagemView.requestFocus()) {
-                //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-            //}
         }
     }
 
@@ -144,10 +132,10 @@ public class Contar extends AppCompatActivity implements Button.OnClickListener{
                 t.show();
             }
             else{
-                ItemContagem ic = new ItemContagem(materialView.getText().toString(),
+                ItemContagem ic = new ItemContagem(material,
                         Integer.valueOf(contagemView.getText().toString()),
                         unidadeView.getText().toString());
-                contagem.addItem(ic);
+                AppModel.getInstance().addItemToContagem(contagem, ic);
                 this.setResult(RESULT_OK);
                 finish();
             }

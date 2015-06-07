@@ -1,4 +1,4 @@
-package com.sousa.inventario;
+package com.sousa.inventario.model;
 
 import java.util.HashMap;
 

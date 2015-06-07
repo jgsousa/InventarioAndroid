@@ -14,6 +14,6 @@ public class InventarioApp extends Application {
     }
 
     public void initSingletons(){
-        AppModel.initInstance();
+        AppModel.initInstance(this);
     }
 }

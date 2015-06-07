@@ -1,20 +1,29 @@
 package com.sousa.inventario.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.sousa.inventario.AppModel;
-import com.sousa.inventario.Contagem;
+import com.sousa.inventario.model.Contagem;
 import com.sousa.inventario.R;
 import com.sousa.inventario.adapters.DetalheAdapter;
 import com.sousa.inventario.helpers.DividerItemDecoration;
+import com.sousa.inventario.model.ItemContagem;
+import com.sousa.inventario.utils.Contagens;
+
+import java.text.DateFormat;
 
 /**
  * Created by Joao on 06/06/2015.
@@ -45,16 +54,20 @@ public class DetalheContagem extends AppCompatActivity implements FloatingAction
         recycle.setAdapter(new DetalheAdapter(this, this.contagem));
         setSupportActionBar(toolbar);
         getSupportActionBar().setElevation(20);
+        getSupportActionBar().setTitle(this.contagem.getCentro() + " - " +
+                DateFormat.getDateInstance().format(this.contagem.getData()));
 
         ImageView imageView = new ImageView(this);
         imageView.setImageResource(R.drawable.ic_add_white_48dp);
 
-        FloatingActionButton actionButton = new FloatingActionButton.Builder(this)
-                .setContentView(imageView)
-                .setBackgroundDrawable(R.drawable.selector_button_red)
-                .build();
+        if(!contagem.isReleased()) {
+            FloatingActionButton actionButton = new FloatingActionButton.Builder(this)
+                    .setContentView(imageView)
+                    .setBackgroundDrawable(R.drawable.selector_button_red)
+                    .build();
 
-        actionButton.setOnClickListener(this);
+            actionButton.setOnClickListener(this);
+        }
 
 
     }
@@ -62,7 +75,7 @@ public class DetalheContagem extends AppCompatActivity implements FloatingAction
     @Override
     public void onClick(View view) {
         Intent i = new Intent(this, Contar.class);
-        i.putExtra("id", String.valueOf(contagem.centro));
+        i.putExtra("id", String.valueOf(contagem.getCentro()));
 
         this.startActivityForResult(i,ITEM_REQUEST);
     }
@@ -75,5 +88,35 @@ public class DetalheContagem extends AppCompatActivity implements FloatingAction
             // This is important, otherwise the result will not be passed to the fragment
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_nova_contagem, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_done) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Submeter contagem?")
+                    .setMessage("Se submeter a contagem ja nao podera ser alterada")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Contagens.releaseContagem(contagem);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .show();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -1,4 +1,4 @@
-package com.sousa.inventario;
+package com.sousa.inventario.model;
 
 import java.util.HashMap;
 
@@ -15,12 +15,12 @@ public class Nave {
         l = new Nave();
         if(loja == "L074") {
             l.codigo = "N074";
-            l.descritivo = "Loja 74";
+            l.descritivo = "Nave 74";
             naves.put(l.codigo, l);
         }
         else {
-            l.codigo = "L130";
-            l.descritivo = "Loja 130";
+            l.codigo = "N130";
+            l.descritivo = "Nave 130";
             naves.put(l.codigo, l);
         }
         return naves;
