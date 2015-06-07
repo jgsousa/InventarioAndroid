@@ -47,10 +47,11 @@ public class DetalheContagem extends AppCompatActivity implements FloatingAction
         getSupportActionBar().setElevation(20);
 
         ImageView imageView = new ImageView(this);
-        imageView.setImageResource(R.drawable.ic_action_new);
+        imageView.setImageResource(R.drawable.ic_add_white_48dp);
 
         FloatingActionButton actionButton = new FloatingActionButton.Builder(this)
                 .setContentView(imageView)
+                .setBackgroundDrawable(R.drawable.selector_button_red)
                 .build();
 
         actionButton.setOnClickListener(this);

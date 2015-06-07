@@ -1,6 +1,7 @@
 package com.sousa.inventario;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,5 +49,9 @@ public class AppModel {
 
     public Contagem getActiveContagem() {
         return activeContagem;
+    }
+
+    public List<Loja> getLojas() {
+        return new ArrayList<>(lojas.values());
     }
 }

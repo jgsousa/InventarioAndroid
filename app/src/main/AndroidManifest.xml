@@ -30,6 +30,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.NovaContagemActivity"
+            android:label="Criar nova contagem" >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".scanner.CaptureActivityAny"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"

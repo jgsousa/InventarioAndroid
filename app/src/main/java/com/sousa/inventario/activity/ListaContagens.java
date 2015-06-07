@@ -1,5 +1,6 @@
 package com.sousa.inventario.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,10 +46,11 @@ public class ListaContagens extends AppCompatActivity implements FloatingActionB
         recycle.setAdapter(adapter);
 
         ImageView imageView = new ImageView(this);
-        imageView.setImageResource(R.drawable.ic_action_new);
+        imageView.setImageResource(R.drawable.ic_add_white_48dp);
 
         FloatingActionButton actionButton = new FloatingActionButton.Builder(this)
                 .setContentView(imageView)
+                .setBackgroundDrawable(R.drawable.selector_button_red)
                 .build();
 
         actionButton.setOnClickListener(this);
@@ -57,8 +59,8 @@ public class ListaContagens extends AppCompatActivity implements FloatingActionB
 
     @Override
     public void onClick(View view) {
-        Toast t = Toast.makeText(this, "Blah", Toast.LENGTH_LONG);
-        t.show();
+        Intent i = new Intent(this, NovaContagemActivity.class);
+        startActivity(i);
     }
 
     @Override

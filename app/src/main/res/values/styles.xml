@@ -7,5 +7,13 @@
         <item name="colorAccent">@color/accentColor</item>
     </style>
 
+    <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:datePickerStyle">@style/MyDatePickerStyle</item>
+    </style>
+
+    <style name="MyDatePickerStyle" parent="@android:style/Widget.Material.Light.DatePicker">
+        <item name="android:colorAccent">@color/datePickerColor</item>
+    </style>
+
 
 </resources>

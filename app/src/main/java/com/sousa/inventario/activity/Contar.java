@@ -47,7 +47,7 @@ public class Contar extends AppCompatActivity implements Button.OnClickListener{
 
         Button b = (Button) findViewById(R.id.button);
         b.setOnClickListener(this);
-        b.setBackgroundColor(getResources().getColor(R.color.primaryColor));
+        b.setBackgroundColor(getResources().getColor(R.color.accentColor));
         b.setTextColor(Color.WHITE);
 
         contagemView = (EditText)findViewById(R.id.editText5);

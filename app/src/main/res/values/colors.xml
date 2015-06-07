@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primaryColor">#009688</color>
-    <color name="primaryColorDark">#00796B</color>
-    <color name="accentColor">#423A75</color>
+    <color name="primaryColor">#2196F3</color>
+    <color name="primaryColorDark">#1976D2</color>
+    <color name="accentColor">#F44336</color>
+    <color name="datePickerColor">#F44336</color>
 </resources>
