@@ -28,7 +28,7 @@ import java.text.DateFormat;
 /**
  * Created by Joao on 06/06/2015.
  */
-public class DetalheContagem extends AppCompatActivity implements FloatingActionButton.OnClickListener{
+public class DetalheContagem extends AppCompatActivity implements FloatingActionButton.OnClickListener {
 
     private Toolbar toolbar;
     private Contagem contagem;
@@ -60,7 +60,7 @@ public class DetalheContagem extends AppCompatActivity implements FloatingAction
         ImageView imageView = new ImageView(this);
         imageView.setImageResource(R.drawable.ic_add_white_48dp);
 
-        if(!contagem.isReleased()) {
+        if (!contagem.isReleased()) {
             FloatingActionButton actionButton = new FloatingActionButton.Builder(this)
                     .setContentView(imageView)
                     .setBackgroundDrawable(R.drawable.selector_button_red)
@@ -77,12 +77,12 @@ public class DetalheContagem extends AppCompatActivity implements FloatingAction
         Intent i = new Intent(this, Contar.class);
         i.putExtra("id", String.valueOf(contagem.getCentro()));
 
-        this.startActivityForResult(i,ITEM_REQUEST);
+        this.startActivityForResult(i, ITEM_REQUEST);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             recycle.getAdapter().notifyDataSetChanged();
         } else {
             // This is important, otherwise the result will not be passed to the fragment
@@ -93,8 +93,12 @@ public class DetalheContagem extends AppCompatActivity implements FloatingAction
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_nova_contagem, menu);
-        return true;
+        if (!contagem.isReleased()) {
+            getMenuInflater().inflate(R.menu.menu_nova_contagem, menu);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -102,19 +106,27 @@ public class DetalheContagem extends AppCompatActivity implements FloatingAction
         int id = item.getItemId();
 
         if (id == R.id.action_done) {
-            new AlertDialog.Builder(this)
-                    .setTitle("Submeter contagem?")
-                    .setMessage("Se submeter a contagem ja nao podera ser alterada")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            Contagens.releaseContagem(contagem);
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    })
-                    .show();
+            if(contagem.getItens().size() > 0) {
+                new AlertDialog.Builder(this)
+                        .setTitle("Submeter contagem?")
+                        .setMessage("Se submeter a contagem ja nao podera ser alterada")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Contagens.releaseContagem(contagem);
+                                setResult(RESULT_OK);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .show();
+            }
+            else{
+                Toast t = Toast.makeText(this, "Contagem sem itens", Toast.LENGTH_SHORT);
+                t.show();
+            }
         }
 
         return super.onOptionsItemSelected(item);

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sousa.inventario.AppModel;
+import com.sousa.inventario.activity.ListaContagens;
 import com.sousa.inventario.model.Contagem;
 import com.sousa.inventario.activity.DetalheContagem;
 import com.sousa.inventario.R;
@@ -21,6 +22,7 @@ import java.text.DateFormat;
  */
 public class InventarioAdapter extends RecyclerView.Adapter<InventarioAdapter.InventarioItem> {
 
+    public static final int NAVIGATE = 90;
     private LayoutInflater inflater;
     private Context context;
 
@@ -41,7 +43,7 @@ public class InventarioAdapter extends RecyclerView.Adapter<InventarioAdapter.In
     @Override
     public void onBindViewHolder(InventarioItem inventarioItem, int i) {
         Contagem c = AppModel.getInstance().getContagens().get(i);
-        inventarioItem.centro.setText(c.getCentro());
+        inventarioItem.centro.setText(c.getCentro() + " - " + c.getDescritivo());
         inventarioItem.data.setText(DateFormat.getDateInstance().format(c.getData()));
         if(c.isReleased()) {
             inventarioItem.synch.setVisibility(View.VISIBLE);
@@ -76,7 +78,8 @@ public class InventarioAdapter extends RecyclerView.Adapter<InventarioAdapter.In
             Intent i = new Intent(context, DetalheContagem.class);
             i.putExtra("id", c.getId());
 
-            context.startActivity(i);
+            ListaContagens actContagens = (ListaContagens) context;
+            actContagens.startActivityForResult(i,NAVIGATE);
         }
     }
 }

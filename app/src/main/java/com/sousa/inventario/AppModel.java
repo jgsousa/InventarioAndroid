@@ -2,10 +2,14 @@ package com.sousa.inventario;
 
 import android.content.Context;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.RetryPolicy;
 import com.sousa.inventario.model.Artigo;
 import com.sousa.inventario.model.Contagem;
 import com.sousa.inventario.model.ItemContagem;
 import com.sousa.inventario.model.Loja;
+import com.sousa.inventario.network.AppRequestQueue;
+import com.sousa.inventario.network.ArtigosRequest;
 import com.sousa.inventario.utils.Contagens;
 
 import java.util.ArrayList;
@@ -137,5 +141,29 @@ public class AppModel {
 
     public Realm getRealm() {
         return realm;
+    }
+
+    public void fetchArtigosFromBackend(String hostname){
+        ArtigosRequest artReq = new ArtigosRequest(hostname);
+        int socketTimeout = 30000;//30 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        artReq.setRetryPolicy(policy);
+        AppRequestQueue.getInstance().addToRequestQueue(artReq);
+    }
+
+    public void setArtigosFromBackend(List<Artigo> artigos){
+        if(artigos != null) {
+            realm.beginTransaction();
+            HashMap<String, Artigo> novos = new HashMap<>();
+
+            for (int i = 0; i < artigos.size(); i++) {
+                Artigo a = artigos.get(i);
+                realm.copyToRealmOrUpdate(a);
+                novos.put(a.getEAN(), a);
+            }
+
+            realm.commitTransaction();
+            this.artigos = novos;
+        }
     }
 }

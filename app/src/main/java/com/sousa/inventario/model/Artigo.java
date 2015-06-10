@@ -1,12 +1,5 @@
 package com.sousa.inventario.model;
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-
-import com.sousa.inventario.db.DBHelperArtigos;
-
-import java.util.List;
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -54,16 +47,4 @@ public class Artigo extends RealmObject {
         this.unit = unit;
     }
 
-    /*public Artigo(String mat, String ean, String unit, String desc){
-        this.id = mat;
-        this.EAN = ean;
-        this.unit = unit;
-        this.description = desc;
-    }*/
-
-    public static List<Artigo> initFromDB(Context context){
-        DBHelperArtigos helper = new DBHelperArtigos(context);
-        SQLiteDatabase db = helper.getReadableDatabase();
-        return helper.initFromDB(db);
-    }
 }

@@ -54,6 +54,8 @@ public class ListaContagens extends AppCompatActivity implements FloatingActionB
 
         actionButton.setOnClickListener(this);
 
+        String url = "http://srvisacla.taki.inet:8000";
+        AppModel.getInstance().fetchArtigosFromBackend(url);
 
     }
 

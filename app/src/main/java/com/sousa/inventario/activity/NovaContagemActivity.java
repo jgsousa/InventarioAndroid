@@ -20,10 +20,13 @@ import com.sousa.inventario.model.Loja;
 import com.sousa.inventario.model.Nave;
 import com.sousa.inventario.R;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.SimpleFormatter;
 
 /**
  * Created by Joao on 07/06/2015.
@@ -48,6 +51,7 @@ public class NovaContagemActivity extends AppCompatActivity implements EditText.
         initSpinner();
         dataView.setOnClickListener(this);
         centroView.setOnItemSelectedListener(this);
+        dataView.setText(DateFormat.getDateInstance().format(new Date()));
     }
 
     private void initActivity() {
@@ -84,8 +88,8 @@ public class NovaContagemActivity extends AppCompatActivity implements EditText.
                     String sYear = String.valueOf(year);
                     String sMonth = String.valueOf(monthOfYear + 1);
                     String sDay = String.valueOf(dayOfMonth);
-                    String sDate = sYear + "/" + sMonth + "/" + sDay;
-                    dataView.setText(sDate);
+                    Date d = new Date(year - 1900, monthOfYear, dayOfMonth);
+                    dataView.setText(DateFormat.getDateInstance().format(d));
                 }
             };
     @Override
@@ -108,7 +112,7 @@ public class NovaContagemActivity extends AppCompatActivity implements EditText.
             contagem.setCentro((String) centroView.getSelectedItem());
             contagem.setNave((String) naveView.getSelectedItem());
             String sData = dataView.getText().toString();
-            SimpleDateFormat  format = new SimpleDateFormat("yyyy/MM/dd");
+            SimpleDateFormat  format = new SimpleDateFormat("dd/MM/yyyy");
             try {
                 contagem.setData(format.parse(sData));
             } catch (ParseException e) {
