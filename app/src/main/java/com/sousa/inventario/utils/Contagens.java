@@ -35,4 +35,14 @@ public class Contagens {
         c.setReleased(true);
         AppModel.getInstance().transactionCommit();
     }
+
+    public static void setSynched(String contagemId){
+        RealmQuery<Contagem> query = AppModel.getInstance().getRealm().where(Contagem.class)
+                .equalTo("id", contagemId);
+        RealmResults<Contagem> results = query.findAll();
+        Contagem c = results.get(0);
+        AppModel.getInstance().transactionStart();
+        c.setSynched(true);
+        AppModel.getInstance().transactionCommit();
+    }
 }

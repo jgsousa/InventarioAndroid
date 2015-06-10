@@ -21,14 +21,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
-
 /**
  * Created by Joao on 08/06/2015.
  */
 public class ArtigosRequest extends JsonObjectRequest {
+
+    public String token;
+    public String cookie;
+
 
     public ArtigosRequest(String host) {
         super(Request.Method.GET, host + "/sap/opu/odata/sap/ZMD_ARTIGOS_SRV/Artigos?&$format=json", new Response.Listener<JSONObject>() {
@@ -56,6 +56,7 @@ public class ArtigosRequest extends JsonObjectRequest {
         String creds = String.format("%s:%s", "deloitte", "deloitte");
         String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
         params.put("Authorization", auth);
+        params.put("X-CSRF-Token", "Fetch");
         return params;
     }
 
@@ -68,6 +69,14 @@ public class ArtigosRequest extends JsonObjectRequest {
 
         return volleyError;
     } */
+
+    @Override
+    protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+        Map<String, String> responseHeaders = response.headers;
+        this.token = responseHeaders.get("X-CSRF-Token");
+        this.cookie = responseHeaders.get("set-cookie");
+        return super.parseNetworkResponse(response);
+    }
 
     private static List<Artigo> parseResponse(JSONObject response) {
         JSONArray array = null;

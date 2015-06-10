@@ -10,8 +10,13 @@ import com.sousa.inventario.model.ItemContagem;
 import com.sousa.inventario.model.Loja;
 import com.sousa.inventario.network.AppRequestQueue;
 import com.sousa.inventario.network.ArtigosRequest;
+import com.sousa.inventario.network.ContagemPost;
 import com.sousa.inventario.utils.Contagens;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +38,7 @@ public class AppModel {
     private HashMap<String, Loja> lojas;
     private Context context;
     private Realm realm;
+    private ArtigosRequest reqArtigos;
 
     public static void initInstance(Context context) {
         if (instance == null) {
@@ -148,6 +154,7 @@ public class AppModel {
         int socketTimeout = 30000;//30 seconds - change to what you want
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         artReq.setRetryPolicy(policy);
+        this.reqArtigos = artReq;
         AppRequestQueue.getInstance().addToRequestQueue(artReq);
     }
 
@@ -165,5 +172,36 @@ public class AppModel {
             realm.commitTransaction();
             this.artigos = novos;
         }
+        postContagensToBackend("http://srvisacla.taki.inet:8000");
+    }
+
+    public void postContagensToBackend(String host) {
+        RealmQuery<Contagem> query = realm.where(Contagem.class).equalTo("released", true)
+                .equalTo("synched", false);
+        RealmResults<Contagem> results = query.findAll();
+        for(int i = 0; i < results.size(); i++){
+            JSONObject body = new JSONObject();
+            JSONObject js = new JSONObject();
+            Contagem c = results.get(i);
+            try {
+                js.put("ID", c.getId());
+                js.put("Loja", c.getCentro());
+                js.put("Data", DateFormat.getDateInstance().format(c.getData()));
+                body.put("d", js);
+            }
+            catch (JSONException e){
+
+            }
+
+            ContagemPost postReq = new ContagemPost(host, js);
+            postReq.token = reqArtigos.token;
+            postReq.cookie = reqArtigos.cookie;
+            postReq.contagemId = c.getId();
+            int socketTimeout = 30000;//30 seconds - change to what you want
+            RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+            postReq.setRetryPolicy(policy);
+            AppRequestQueue.getInstance().addToRequestQueue(postReq);
+        }
+
     }
 }
